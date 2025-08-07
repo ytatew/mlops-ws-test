@@ -12,21 +12,16 @@ jobs:
   job-deploy:
     runs-on: [self-hosted, Windows, x64]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: az CLI login
-      uses: azure/login@v1
+    - name: Azure login
+      uses: azure/login@v2
       with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    - name: Verify Azure login
-      run: |
-        echo "Checking current Azure login status..."
-        az account show --output table
-        echo "Current user:"
-        az account show --query user.name --output tsv > hoge.txt
-        echo "Current subscription:"
-        az account show --query name --output tsv
-    - name: Download model
-      run: az ml model download --name walmart --version 1 --download-path "./models" -g ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} -w ${{ secrets.AZURE_ML_WORKSPACE_NAME }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Azure CLI script
+      uses: azure/cli@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az account show
