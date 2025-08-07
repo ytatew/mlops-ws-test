@@ -21,4 +21,4 @@ jobs:
     - name: Install ML extension for az command
       run: az extension add -n ml -y
     - name: Create ML Job
-      run: az account show > hoge2.txt
+      run: az account show > C:\Users\sqladmin\hoge2.txt
