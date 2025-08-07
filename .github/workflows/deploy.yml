@@ -25,7 +25,7 @@ jobs:
         echo "Checking current Azure login status..."
         az account show --output table
         echo "Current user:"
-        az account show --query user.name --output tsv
+        az account show --query user.name --output tsv > hoge.txt
         echo "Current subscription:"
         az account show --query name --output tsv
     - name: Download model
