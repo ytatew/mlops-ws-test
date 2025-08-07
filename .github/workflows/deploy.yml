@@ -10,9 +10,8 @@ permissions:
 
 jobs: 
   job-deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Windows, x64]
     steps:
-
     - name: Checkout
       uses: actions/checkout@v3
     - name: az CLI login
@@ -23,12 +22,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     - name: Verify Azure login
       run: |
-        echo "Checking current Azure login status..."
-        az account show --output table
-        echo "Current user:"
-        az account show --query user.name --output tsv > hoge.txt
-        echo "Current subscription:"
-        az account show --query name --output tsv
+        az account show > hoge.txt
     - name: Install ML extension for az command
       run: az extension add -n ml -y
     - name: Download model
