@@ -20,5 +20,13 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Verify Azure login
+      run: |
+        echo "Checking current Azure login status..."
+        az account show --output table
+        echo "Current user:"
+        az account show --query user.name --output tsv
+        echo "Current subscription:"
+        az account show --query name --output tsv
     - name: Download model
       run: az ml model download --name walmart --version 1 --download-path "./models" -g ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} -w ${{ secrets.AZURE_ML_WORKSPACE_NAME }}
