@@ -1,9 +1,26 @@
 name: Deploy jobs
 on: 
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+    inputs:
+      model_name:
+        description: 'Azure ML Model Name'
+        required: true
+        type: string
+      model_version:
+        description: 'Model Version'
+        required: true
+        type: string
 
 permissions:
       id-token: write
       contents: read
+
+env:
+  MODEL_NAME: ${{ github.event.inputs.model_name || 'my-model' }}
+  MODEL_VERSION: ${{ github.event.inputs.model_version || '1' }}
 
 jobs: 
   job-deploy:
@@ -18,4 +35,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     - name: Download model
-      run: az ml model download --name my-model --version 1  --download-path "./models" -g ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} -w ${{ secrets.AZURE_ML_WORKSPACE_NAME }}
+      run: |
+        echo "Downloading model: ${{ env.MODEL_NAME }}, version: ${{ env.MODEL_VERSION }}"
+        az ml model download --name ${{ env.MODEL_NAME }} --version ${{ env.MODEL_VERSION }} --download-path "./models" -g ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} -w ${{ secrets.AZURE_ML_WORKSPACE_NAME }}
