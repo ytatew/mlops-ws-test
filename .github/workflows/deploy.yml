@@ -1,0 +1,21 @@
+name: Deploy jobs
+on: 
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs: 
+  job-deploy:
+    runs-on: [self-hosted, Windows, x64]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: az CLI login
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Download model
+      run: az ml model download --name my-model --version 1  --download-path "./models" -g ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} -w ${{ secrets.AZURE_ML_WORKSPACE_NAME }}
